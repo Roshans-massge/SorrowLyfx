@@ -1,2 +1,0 @@
-# SorrowLyfx
-Kuchh naya hai
