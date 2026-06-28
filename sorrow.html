@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SorrowLyfx Journey</title>
+  
+  <!-- Google Fonts for Gaming and Premium look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* Global Resets & Theme Variables */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    :root {
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Poppins', sans-serif;
+      
+      /* Theme Palettes - Configured Dynamically by Active Screen */
+      --royal-blue-bg: radial-gradient(circle at center, #111e38 0%, #060b14 100%);
+      --emerald-green-bg: radial-gradient(circle at center, #092c1c 0%, #030d09 100%);
+      --midnight-navy-bg: radial-gradient(circle at center, #0a1128 0%, #02040a 100%);
+      --dark-crimson-bg: radial-gradient(circle at center, #350c14 0%, #0f0205 100%);
+      --teal-blue-bg: radial-gradient(circle at center, #082d35 0%, #020e11 100%);
+      --luxury-gold-purple: radial-gradient(circle at center, #1b0c30 0%, #06020c 100%);
+
+      --current-bg: var(--royal-blue-bg);
+      --accent-glow: rgba(0, 110, 255, 0.4);
+      --theme-glow: #00e5ff;
+    }
+
+    body {
+      background: var(--current-bg);
+      color: #ffffff;
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      perspective: 1500px;
+      transition: background 1.2s ease;
+    }
+
+    /* Fixed Premium Glass Navigation Bar */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      z-index: 1000;
+      background: rgba(10, 10, 20, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+    }
+
+    .nav-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .nav-logo {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px var(--theme-glow));
+      animation: logoPulse 3s infinite ease-in-out;
+    }
+
+    .nav-brand-title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, #ffffff, #888888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-stats {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-badge span {
+      color: #ffd700;
+    }
+
+    /* Cinematic Motion Background Layer */
+    .bg-animation-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      opacity: 0.25;
+      object-fit: cover;
+    }
+
+    /* Fallback Canvas Particles & Floating Lights */
+    #particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .floating-light {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, rgba(0,0,0,0) 70%);
+      border-radius: 50%;
+      opacity: 0.6;
+      mix-blend-mode: screen;
+      animation: drift 15s infinite ease-in-out;
+    }
+
+    .floating-light:nth-child(2) {
+      animation-delay: -5s;
+      width: 500px;
+      height: 500px;
+    }
+
+    /* 3D Page Transitions Setup */
+    .screen-wrapper {
+      flex: 1;
+      position: relative;
+      margin-top: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+    }
+
+    .screen {
+      position: absolute;
+      width: 90%;
+      max-width: 1200px;
+      min-height: calc(100vh - 120px);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transform-style: preserve-3d;
+      transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.2s, filter 1.2s;
+      opacity: 0;
+      filter: blur(15px);
+      padding: 40px 20px;
+    }
+
+    .screen.active {
+      display: flex;
+      opacity: 1;
+      filter: blur(0px);
+      transform: rotateY(0deg) translateZ(0);
+    }
+
+    .screen.exit-left {
+      transform: rotateY(-35deg) translateZ(-600px) translateX(-100%);
+      opacity: 0;
+    }
+
+    .screen.enter-right {
+      transform: rotateY(35deg) translateZ(-600px) translateX(100%);
+      opacity: 0;
+    }
+
+    /* Bubbly, 3D Gaming Pookie Buttons */
+    .pookie-btn {
+      position: relative;
+      font-family: var(--font-body);
+      font-weight: 900;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #fff;
+      background: linear-gradient(135deg, #00b4db, #0083b0);
+      border: 3px solid #ffffff;
+      border-radius: 50px;
+      padding: 16px 36px;
+      cursor: pointer;
+      box-shadow: 0 8px 0 #005a78, 0 15px 25px rgba(0,0,0,0.5);
+      transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      outline: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px;
+    }
+
+    .pookie-btn:hover {
+      transform: translateY(2px) scale(1.03);
+      box-shadow: 0 6px 0 #005a78, 0 10px 15px rgba(0,0,0,0.4);
+    }
+
+    .pookie-btn:active {
+      transform: translateY(8px) scale(0.97);
+      box-shadow: 0 0px 0 #005a78, 0 5px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Red Pookie Buttons (E.g. Gamer/FF related) */
+    .pookie-btn.red {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      box-shadow: 0 8px 0 #900, 0 15px 25px rgba(0,0,0,0.5);
+    }
+    .pookie-btn.red:hover {
+      box-shadow: 0 6px 0 #900, 0 10px 15px rgba(0,0,0,0.4);
+    }
+    .pookie-btn.red:active {
+      box-shadow: 0 0px 0 #900, 0 5px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Gold Pookie Buttons (E.g. Celebration / Certificate) */
+    .pookie-btn.gold {
+      background: linear-gradient(135deg, #ffe259, #ffa751);
+      color: #1a0f00;
+      border-color: #1a0f00;
+      box-shadow: 0 8px 0 #b37400, 0 15px 25px rgba(0,0,0,0.5);
+    }
+    .pookie-btn.gold:hover {
+      box-shadow: 0 6px 0 #b37400, 0 10px 15px rgba(0,0,0,0.4);
+    }
+    .pookie-btn.gold:active {
+      box-shadow: 0 0px 0 #b37400, 0 5px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Disabled State for Pookie Buttons */
+    .pookie-btn:disabled {
+      background: #444;
+      box-shadow: none;
+      border-color: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Start Screen Components */
+    .welcome-container {
+      text-align: center;
+      max-width: 800px;
+    }
+
+    .welcome-title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      line-height: 1.1;
+      text-shadow: 0 0 20px var(--accent-glow);
+      letter-spacing: 2px;
+    }
+
+    .welcome-subtitle {
+      font-size: 1.2rem;
+      color: #a0aec0;
+      margin-bottom: 40px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .welcome-logo-huge {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 30px auto;
+      object-fit: contain;
+      animation: logoGlow 4s infinite alternate;
+    }
+
+    /* User Details Question Container */
+    .question-card {
+      background: rgba(10, 20, 30, 0.7);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+
+    .question-progress {
+      font-size: 0.9rem;
+      color: #00e5ff;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 30px;
+    }
+
+    .input-field {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      color: #fff;
+      font-family: var(--font-body);
+      outline: none;
+      transition: all 0.3s ease;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .input-field:focus {
+      border-color: var(--theme-glow);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .choice-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: var(--font-body);
+    }
+
+    .choice-btn:hover {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: var(--theme-glow);
+    }
+
+    .choice-btn.selected {
+      background: var(--theme-glow);
+      color: #000;
+      font-weight: 700;
+      border-color: var(--theme-glow);
+    }
+
+    /* Language & Voice Settings */
+    .settings-container {
+      background: rgba(10, 10, 20, 0.85);
+      border-radius: 24px;
+      border: 2px solid rgba(255,255,255,0.1);
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Dashboard / Journey Path Map */
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .path-map {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      margin: 60px 0;
+      padding: 0 40px;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .path-map::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .stage-node {
+      position: relative;
+      z-index: 2;
+      width: 80px;
+      height: 80px;
+      background: #1a1a1a;
+      border: 4px solid #444;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .stage-node.unlocked {
+      background: #00e5ff;
+      border-color: #fff;
+      color: #000;
+      box-shadow: 0 0 25px #00e5ff;
+    }
+
+    .stage-node.current {
+      background: #ff416c;
+      border-color: #fff;
+      color: #fff;
+      box-shadow: 0 0 25px #ff416c;
+      animation: nodePulse 1.5s infinite alternate;
+    }
+
+    .stage-node.completed {
+      background: #00e676;
+      border-color: #fff;
+      color: #000;
+      box-shadow: 0 0 25px #00e676;
+    }
+
+    .stage-node .node-tooltip {
+      position: absolute;
+      bottom: -45px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      pointer-events: none;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Game Arena & Screens */
+    .arena-card {
+      background: rgba(10, 5, 20, 0.9);
+      border: 3px solid #ff0055;
+      box-shadow: 0 0 40px rgba(255, 0, 85, 0.25);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .arena-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .game-viewport {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 20px;
+      min-height: 350px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    /* Mini Games Specific styling */
+    .game-grid {
+      display: grid;
+      gap: 15px;
+    }
+
+    .card-element {
+      width: 80px;
+      height: 80px;
+      background: #1f1f2e;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .card-element.matched {
+      background: #00e676;
+      border-color: #fff;
+    }
+
+    /* Canvas based game elements */
+    #canvas-game-board {
+      background: #050510;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+    }
+
+    /* Final Professional Certificate Styling */
+    .certificate-viewport {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      width: 100%;
+    }
+
+    .certificate {
+      width: 1000px;
+      height: 700px;
+      background: linear-gradient(135deg, #090514 0%, #15092b 100%);
+      border: 15px double #d4af37;
+      border-radius: 16px;
+      padding: 40px;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.9), inset 0 0 100px rgba(212, 175, 55, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-body);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .certificate-watermark {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      opacity: 0.04;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .cert-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cert-logo {
+      height: 60px;
+      width: auto;
+      filter: drop-shadow(0 0 10px #d4af37);
+    }
+
+    .cert-subtitle {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      letter-spacing: 5px;
+      color: #d4af37;
+      text-transform: uppercase;
+    }
+
+    .cert-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(to right, #ffffff 30%, #ffd700 70%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      margin-top: 5px;
+    }
+
+    .cert-presents {
+      font-size: 1rem;
+      font-style: italic;
+      color: #a0aec0;
+      margin-top: 15px;
+    }
+
+    .cert-recipient-name {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+      margin: 15px 0;
+      border-bottom: 2px solid #d4af37;
+      padding-bottom: 5px;
+      min-width: 350px;
+      text-align: center;
+    }
+
+    .cert-body-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      text-align: center;
+      max-width: 750px;
+      color: #e2e8f0;
+    }
+
+    .cert-dynamic-rec {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #d4af37;
+      margin: 15px 0;
+    }
+
+    .cert-footer {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 10px;
+    }
+
+    .cert-metadata {
+      font-size: 0.8rem;
+      color: #a0aec0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .cert-metadata span b {
+      color: #fff;
+    }
+
+    .cert-qr-container {
+      width: 100px;
+      height: 100px;
+      background: white;
+      padding: 5px;
+      border-radius: 8px;
+    }
+
+    .cert-qr-container canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .cert-signatures {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cert-signature-img {
+      font-family: 'Cinzel', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: #ffd700;
+    }
+
+    .cert-signature-line {
+      width: 180px;
+      height: 1px;
+      background: #d4af37;
+      margin: 5px 0;
+    }
+
+    .cert-signature-title {
+      font-size: 0.75rem;
+      color: #a0aec0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .cert-seal {
+      width: 70px;
+      height: 70px;
+      border: 2px dashed #d4af37;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.6rem;
+      text-align: center;
+      color: #ffd700;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    /* Animations */
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px var(--theme-glow)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 20px var(--theme-glow)); }
+    }
+
+    @keyframes logoGlow {
+      0% { filter: drop-shadow(0 0 15px var(--accent-glow)); transform: translateY(0); }
+      100% { filter: drop-shadow(0 0 35px var(--accent-glow)); transform: translateY(-10px); }
+    }
+
+    @keyframes nodePulse {
+      0% { transform: scale(1); box-shadow: 0 0 15px currentColor; }
+      100% { transform: scale(1.15); box-shadow: 0 0 30px currentColor; }
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(150px, 80px); }
+    }
+
+    /* Print Styles */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .certificate-viewport, .certificate-viewport * {
+        visibility: visible;
+      }
+      .certificate-viewport {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .certificate {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1.43 / 1;
+        padding: 20px;
+      }
+      .cert-title { font-size: 1.5rem; }
+      .cert-recipient-name { font-size: 2rem; }
+      .cert-body-text { font-size: 0.8rem; }
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 0 20px; }
+      .nav-brand-title { display: none; }
+      .welcome-title { font-size: 2.2rem; }
+      .welcome-subtitle { font-size: 0.9rem; }
+      .path-map { flex-direction: column; margin: 30px 0; }
+      .path-map::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FIXED GLASS NAVIGATION BAR -->
+  <header>
+    <div class="nav-logo-container">
+      <img src="https://i.ibb.co/gLLDwx7v/New-Project-30-601-ED0-C.png" alt="SorrowLyfx Logo" class="nav-logo">
+      <span class="nav-brand-title">SorrowLyfx</span>
+    </div>
+    <div class="nav-stats">
+      <div class="stat-badge">
+        Level: <span id="nav-level-val">1</span>
+      </div>
+      <div class="stat-badge">
+        XP: <span id="nav-xp-val">0</span>
+      </div>
+      <button class="pookie-btn" style="padding: 5px 15px; font-size: 0.8rem; margin:0; border-radius:15px; box-shadow:none;" onclick="toggleLangSettings()">
+        🌐 <span id="nav-lang-btn">Language</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ANIMATED BACKGROUND SYSTEM -->
+  <div class="bg-animation-container">
+    <video class="bg-video" autoplay muted loop playsinline>
+      <!-- Premium dark cosmic loop fallback -->
+      <source src="https://assets.mixkit.co/videos/preview/mixkit-nebula-in-space-background-1611-large.mp4" type="video/mp4">
+    </video>
+    <div class="floating-light"></div>
+    <div class="floating-light"></div>
+    <canvas id="particle-canvas"></canvas>
+  </div>
+
+  <!-- SCREENS ROOT -->
+  <div class="screen-wrapper">
+
+    <!-- SCREEN 1: START SCREEN (Royal Blue) -->
+    <div id="screen-welcome" class="screen active" style="--current-bg: var(--royal-blue-bg); --accent-glow: rgba(0, 110, 255, 0.4); --theme-glow: #00e5ff;">
+      <div class="welcome-container">
+        <img src="https://i.ibb.co/gLLDwx7v/New-Project-30-601-ED0-C.png" alt="SorrowLyfx Logo" class="welcome-logo-huge">
+        <h1 class="welcome-title" data-t="welcome_title">WELCOME TO SORROWLYFX JOURNEY</h1>
+        <p class="welcome-subtitle" data-t="welcome_subtitle">THE ULTIMATE ADVENTURE OF STRATEGY & SPIRIT</p>
+        <div>
+          <button class="pookie-btn" onclick="startJourney()" data-t="btn_start">Start Journey</button>
+          <button id="btn-continue" class="pookie-btn" onclick="continueJourney()" disabled data-t="btn_continue">Continue Journey</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: LANGUAGE & VOICE SETTINGS (Emerald Green) -->
+    <div id="screen-language" class="screen" style="--current-bg: var(--emerald-green-bg); --accent-glow: rgba(16, 185, 129, 0.4); --theme-glow: #10b981;">
+      <div class="settings-container">
+        <h2 class="welcome-title" style="font-size:2.2rem;" data-t="lang_header">Choose Language & Assistant</h2>
+        
+        <div style="margin: 30px 0;">
+          <h3 style="margin-bottom:15px; font-weight:600;" data-t="lang_choose">Choose Language:</h3>
+          <div style="display:flex; justify-content:center; gap:20px;">
+            <button class="pookie-btn" id="lang-en-btn" onclick="setLanguage('en')">English</button>
+            <button class="pookie-btn" id="lang-hi-btn" onclick="setLanguage('hi')">Hindi (Hinglish)</button>
+          </div>
+        </div>
+
+        <div style="margin: 30px 0;">
+          <h3 style="margin-bottom:15px; font-weight:600;" data-t="voice_choose">Voice Assistant:</h3>
+          <div style="display:flex; justify-content:center; gap:20px;">
+            <button class="pookie-btn" id="voice-male-btn" onclick="setVoice('male')">Deep Male Voice</button>
+            <button class="pookie-btn" id="voice-female-btn" onclick="setVoice('female')">Female Voice</button>
+          </div>
+        </div>
+
+        <button class="pookie-btn gold" onclick="saveLanguageSettings()" data-t="btn_confirm">Confirm Settings</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: USER DETAILS SCREEN (Emerald Green) -->
+    <div id="screen-details" class="screen" style="--current-bg: var(--emerald-green-bg); --accent-glow: rgba(16, 185, 129, 0.4); --theme-glow: #10b981;">
+      <div class="question-card">
+        <div class="question-progress" id="question-progress-indicator">Question 1 of 12</div>
+        <div class="question-text" id="question-text-content">What is your Full Name?</div>
+        
+        <div id="question-input-container">
+          <!-- Populated via Javascript dynamic fields -->
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:space-between;">
+          <button class="pookie-btn" onclick="prevQuestion()" id="btn-prev-q" style="padding:10px 24px; font-size:0.9rem;" data-t="btn_back">Back</button>
+          <button class="pookie-btn gold" onclick="nextQuestion()" id="btn-next-q" style="padding:10px 24px; font-size:0.9rem;" data-t="btn_next">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: ROADMAP DASHBOARD (Midnight Navy) -->
+    <div id="screen-dashboard" class="screen" style="--current-bg: var(--midnight-navy-bg); --accent-glow: rgba(30, 41, 59, 0.4); --theme-glow: #60a5fa;">
+      <div class="dashboard-header">
+        <h1 class="welcome-title" id="journey-title-header" style="font-size:2.5rem;">WARRIOR LEGENDS JOURNEY</h1>
+        <p class="welcome-subtitle" id="journey-subtitle-text">ROYAL KINGDOM OF WARRIORS</p>
+      </div>
+
+      <div class="path-map" id="stages-path-container">
+        <!-- Render 7 Stages Dynamically -->
+      </div>
+
+      <div class="question-card" style="max-width:800px; margin-top:20px; display:flex; flex-direction:row; justify-content:space-around; align-items:center; flex-wrap:wrap; padding:20px;">
+        <div>
+          <h4 style="color:#a0aec0;" data-t="stats_score">Total Score</h4>
+          <h2 style="font-size:2rem; color:#ffd700;" id="dash-score-val">0</h2>
+        </div>
+        <div>
+          <h4 style="color:#a0aec0;" data-t="stats_xp">XP Points</h4>
+          <h2 style="font-size:2rem; color:#00e5ff;" id="dash-xp-val">0</h2>
+        </div>
+        <div>
+          <h4 style="color:#a0aec0;" data-t="stats_progress">Progress</h4>
+          <h2 style="font-size:2rem; color:#00e676;" id="dash-progress-val">0%</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: GAME ARENA OVERLAY (Dark Crimson) -->
+    <div id="screen-arena" class="screen" style="--current-bg: var(--dark-crimson-bg); --accent-glow: rgba(220, 38, 38, 0.4); --theme-glow: #ef4444;">
+      <div class="arena-card">
+        <div class="arena-header">
+          <div>
+            <h2 id="arena-stage-title" style="font-family:var(--font-display); font-size:1.6rem;">Stage Game</h2>
+            <p id="arena-stage-desc" style="font-size:0.85rem; color:#a0aec0;">Complete the test to proceed</p>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:bold; color:#ff416c;"><span data-t="game_timer">Timer</span>: <span id="arena-timer">30</span>s</div>
+            <div style="font-weight:bold; color:#00e5ff;"><span data-t="game_score">Score</span>: <span id="arena-score">0</span></div>
+          </div>
+        </div>
+
+        <div id="arena-instructions" class="game-viewport">
+          <h3 style="font-family:var(--font-display); font-size:1.5rem; margin-bottom:15px;" data-t="stage_instructions">Stage Instructions</h3>
+          <p id="arena-instructions-text" style="font-size:1rem; max-width:500px; line-height:1.6; margin-bottom:30px;">How to play dynamic instructions.</p>
+          <button class="pookie-btn gold" onclick="startGameSession()" data-t="btn_letsgo">Let's Go!</button>
+        </div>
+
+        <div id="arena-playfield" class="game-viewport" style="display:none;">
+          <!-- Dynamically populated per-game elements -->
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button class="pookie-btn" onclick="exitArena()" style="padding:10px 24px; font-size:0.9rem;" data-t="btn_exit">Exit Stage</button>
+          <button class="pookie-btn red" id="arena-retry-btn" onclick="restartStage()" style="padding:10px 24px; font-size:0.9rem; display:none;" data-t="btn_retry">Retry</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 6: CELEBRATION & FINAL CERTIFICATE SCREEN (Luxury Purple/Black) -->
+    <div id="screen-celebration" class="screen" style="--current-bg: var(--luxury-gold-purple); --accent-glow: rgba(168, 85, 247, 0.4); --theme-glow: #a855f7;">
+      <h1 class="welcome-title" style="font-size:2.8rem; background:linear-gradient(to right, #ffe259, #ffa751); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-align:center; margin-bottom:10px;" data-t="congrats_msg">Congratulations!</h1>
+      <p style="text-align:center; color:#e2e8f0; font-size:1.1rem; margin-bottom:30px;" data-t="congrats_sub">Your SorrowLyfx Journey is Complete.</p>
+
+      <!-- Interactive Luxury Certificate Viewport -->
+      <div class="certificate-viewport">
+        <div class="certificate" id="certificate-print-area">
+          <div class="certificate-watermark">
+            <svg viewBox="0 0 100 100" fill="#d4af37">
+              <path d="M50 0 L90 30 L90 70 L50 100 L10 70 L10 30 Z" />
+            </svg>
+          </div>
+          
+          <div class="cert-header">
+            <img src="https://i.ibb.co/gLLDwx7v/New-Project-30-601-ED0-C.png" alt="SorrowLyfx" class="cert-logo">
+            <div class="cert-subtitle" data-t="cert_org">SorrowLyfx Academy</div>
+            <div class="cert-title" data-t="cert_main_title">CERTIFICATE OF PROFESSIONAL EXCELLENCE</div>
+            <div class="cert-presents" data-t="cert_proudly">This certificate is proudly presented to</div>
+          </div>
+
+          <div class="cert-recipient-name" id="cert-user-name">SOLO GAMER</div>
+
+          <div class="cert-body-text" id="cert-body-desc">
+            For successfully completing the SorrowLyfx Journey and demonstrating exceptional dedication, perseverance, intelligence, and determination.
+          </div>
+
+          <div class="cert-dynamic-rec" id="cert-rec-badge">
+            Recognized as a Passionate and Determined Gamer with excellent strategic thinking.
+          </div>
+
+          <div class="cert-footer">
+            <div class="cert-metadata">
+              <span><b>NAME:</b> <span id="cert-meta-name"></span></span>
+              <span><b>NICKNAME:</b> <span id="cert-meta-nickname"></span></span>
+              <span><b>COUNTRY:</b> <span id="cert-meta-country"></span></span>
+              <span><b>JOURNEY:</b> <span id="cert-meta-journey"></span></span>
+              <span><b>DATE:</b> <span id="cert-meta-date"></span></span>
+              <span><b>TOTAL XP:</b> <span id="cert-meta-xp"></span></span>
+              <span><b>RANK:</b> <span id="cert-meta-rank">PLATINUM</span></span>
+              <span><b>CERT NO:</b> <span id="cert-meta-id">SLX-2026-X839</span></span>
+            </div>
+
+            <div class="cert-qr-container">
+              <canvas id="cert-qr-canvas"></canvas>
+            </div>
+
+            <div class="cert-signatures">
+              <div class="cert-signature-img">SorrowLyfx</div>
+              <div class="cert-signature-line"></div>
+              <div class="cert-signature-title" data-t="cert_founder">Founder & Journey Director</div>
+            </div>
+
+            <div class="cert-seal">
+              SorrowLyfx<br>Official<br>Seal
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate Download and Action Area -->
+      <div style="margin-top:40px; text-align:center;">
+        <button class="pookie-btn gold" onclick="downloadCertificatePNG()" data-t="btn_download_png">Download PNG</button>
+        <button class="pookie-btn" onclick="printCertificate()" data-t="btn_print">Print Certificate</button>
+        <button class="pookie-btn red" onclick="restartEntireJourney()" data-t="btn_restart">Restart Journey</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- AUDIO CONTEXT SYNTHESIZER FOR OFFLINE FX -->
+  <script>
+    class SoundSynth {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
+      playClick() {
+        this.init();
+        if (!this.ctx) return;
+        let osc = this.ctx.createOscillator();
+        let gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.1);
+      }
+      playSuccess() {
+        this.init();
+        if (!this.ctx) return;
+        let now = this.ctx.currentTime;
+        let notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+        notes.forEach((freq, idx) => {
+          let osc = this.ctx.createOscillator();
+          let gain = this.ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+          gain.gain.setValueAtTime(0.2, now + idx * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.3);
+          osc.start(now + idx * 0.1);
+          osc.stop(now + idx * 0.1 + 0.3);
+        });
+      }
+      playFail() {
+        this.init();
+        if (!this.ctx) return;
+        let osc = this.ctx.createOscillator();
+        let gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.frequency.setValueAtTime(250, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(70, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.3);
+      }
+      playAchievement() {
+        this.init();
+        if (!this.ctx) return;
+        let now = this.ctx.currentTime;
+        let osc1 = this.ctx.createOscillator();
+        let osc2 = this.ctx.createOscillator();
+        let gain = this.ctx.createGain();
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc1.frequency.setValueAtTime(587.33, now); // D5
+        osc1.frequency.setValueAtTime(880, now + 0.15); // A5
+        osc2.frequency.setValueAtTime(698.46, now); // F5
+        osc2.frequency.setValueAtTime(1046.50, now + 0.15); // C6
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+        osc1.start();
+        osc2.start();
+        osc1.stop(now + 0.6);
+        osc2.stop(now + 0.6);
+      }
+    }
+    const fx = new SoundSynth();
+  </script>
+
+  <!-- GAME & SYSTEM SCRIPT -->
+  <script>
+    // Pure dynamic localization system containing detailed Hinglish representation & Speech synthesis maps
+    const TRANSLATIONS = {
+      en: {
+        welcome_title: "WELCOME TO SORROWLYFX JOURNEY",
+        welcome_subtitle: "THE ULTIMATE ADVENTURE OF STRATEGY & SPIRIT",
+        btn_start: "Start Journey",
+        btn_continue: "Continue Journey",
+        btn_confirm: "Confirm Settings",
+        lang_header: "Choose Language & Assistant",
+        lang_choose: "Choose Language:",
+        voice_choose: "Voice Assistant:",
+        stats_score: "Total Score",
+        stats_xp: "XP Points",
+        stats_progress: "Progress",
+        game_timer: "Timer",
+        game_score: "Score",
+        stage_instructions: "Stage Instructions",
+        btn_letsgo: "Let's Go!",
+        btn_back: "Back",
+        btn_next: "Next",
+        btn_exit: "Exit Stage",
+        btn_retry: "Retry",
+        congrats_msg: "Congratulations!",
+        congrats_sub: "Your SorrowLyfx Journey is Complete.",
+        cert_org: "SorrowLyfx Academy",
+        cert_main_title: "CERTIFICATE OF PROFESSIONAL EXCELLENCE",
+        cert_proudly: "This certificate is proudly presented to",
+        cert_founder: "Founder & Journey Director",
+        btn_download_png: "Download PNG",
+        btn_print: "Print Certificate",
+        btn_restart: "Restart Journey",
+        speech_welcome: "Welcome to Sorrow Lyfx Journey! Your adventure begins now.",
+        speech_complete: "Congratulations! Your journey is complete. Here is your certification.",
+        speech_stage_start: "Get ready for the next challenge.",
+        speech_stage_fail: "Oh no! Try again."
+      },
+      hi: {
+        welcome_title: "SORROWLYFX JOURNEY MEIN AAPKA SWAGAT HAI",
+        welcome_subtitle: "STRATEGY AUR SPIRIT KA ANKHA SAFAR",
+        btn_start: "Journey Shuru Karein",
+        btn_continue: "Journey Jaari Rakhein",
+        btn_confirm: "Settings Bachayein",
+        lang_header: "Bhasha aur Assistant Chunein",
+        lang_choose: "Bhasha Chunein:",
+        voice_choose: "Voice Assistant Chunein:",
+        stats_score: "Kul Score",
+        stats_xp: "XP Points",
+        stats_progress: "Pragati",
+        game_timer: "Samay",
+        game_score: "Score",
+        stage_instructions: "Nirdesh",
+        btn_letsgo: "Chalo Shuru Karein!",
+        btn_back: "Peeche",
+        btn_next: "Aage",
+        btn_exit: "Stage Chhodein",
+        btn_retry: "Dobara Koshish",
+        congrats_msg: "Bahut Badhai Ho!",
+        congrats_sub: "Aapka SorrowLyfx Journey poora ho chuka hai.",
+        cert_org: "SorrowLyfx Academy",
+        cert_main_title: "CRAFT OF PROFESSIONAL EXCELLENCE CERTIFICATE",
+        cert_proudly: "Yeh pramaan patra garv ke saath prastut kiya jata hai",
+        cert_founder: "Founder aur Journey Sanchalak",
+        btn_download_png: "PNG Download Karein",
+        btn_print: "Print Karein",
+        btn_restart: "Dobara Shuru Karein",
+        speech_welcome: "Namaste! Sorrow Lyfx Journey mein aapka swagat hai. Hamara naya adventure ab shuru hota hai.",
+        speech_complete: "Shabash! Aapne saare levels poore kar liye hain. Yeh raha aapka official certificate.",
+        speech_stage_start: "Taiyar ho jaiye agle challenge ke liye.",
+        speech_stage_fail: "Arre yaar! Koshish dobara karein."
+      }
+    };
+
+    // System State
+    let state = {
+      lang: 'en',
+      voice: 'female',
+      currentScreen: 'screen-welcome',
+      userDetails: {},
+      isGamer: false,
+      currentQuestionIndex: 0,
+      currentActiveStage: 1,
+      totalXP: 0,
+      totalScore: 0,
+      completedStages: {},
+      certificateId: ''
+    };
+
+    // Questionnaire configuration (12 detailed questions)
+    const QUESTIONS = [
+      { id: 'name', type: 'text', textEn: 'What is your Full Name?', textHi: 'Aapka Poora Naam kya hai?' },
+      { id: 'nickname', type: 'text', textEn: 'What is your Nickname / Gamer Name?', textHi: 'Aapka Nickname ya Gamer Name kya hai?' },
+      { id: 'country', type: 'text', textEn: 'Which Country are you playing from?', textHi: 'Aap kis Desh se khel rahe hain?' },
+      { id: 'state', type: 'text', textEn: 'Which State do you reside in?', textHi: 'Aap kis Rajya (State) mein rehte hain?' },
+      { id: 'city', type: 'text', textEn: 'Which City are you located in?', textHi: 'Aap kis Shehar (City) se hain?' },
+      { id: 'age', type: 'number', textEn: 'How old are you?', textHi: 'Aapki Umra (Age) kya hai?' },
+      { id: 'favColor', type: 'text', textEn: 'What is your Favorite Color?', textHi: 'Aapka pasandida Rang (Color) kaun sa hai?' },
+      { id: 'profession', type: 'text', textEn: 'What is your Dream Profession?', textHi: 'Aapka sapno ka Profession kya hai?' },
+      { id: 'favGame', type: 'text', textEn: 'What is your absolute Favorite Game?', textHi: 'Aapka pasandida Game kaun sa hai?' },
+      { id: 'hobby', type: 'text', textEn: 'What is your Favorite Hobby?', textHi: 'Aapka sabse pasandida Hobby kya hai?' },
+      { id: 'email', type: 'text', textEn: 'What is your Email Address? (Optional)', textHi: 'Aapka Email address kya hai? (Optional)' },
+      { id: 'isFF', type: 'choice', textEn: 'Are you a Free Fire Player?', textHi: 'Kya aap Free Fire khelte hain?', options: [{val: 'yes', label: 'Yes / Haan'}, {val: 'no', label: 'No / Nahi'}] }
+    ];
+
+    // Journey Configuration
+    const GAMER_STAGES = [
+      { id: 1, name: "Identity Verification", desc: "Enter your player UID and verify security credentials." },
+      { id: 2, name: "Treasure Finder", desc: "Discover the hidden tactical loot containers on the kingdom coordinates." },
+      { id: 3, name: "Reaction Master", desc: "Test your quick response gaming combat mechanics." },
+      { id: 4, name: "Memory Match", desc: "Match the hidden royal warrior profile layouts." },
+      { id: 5, name: "Crystal Collector", desc: "Collect tactical energy crystals descending from the arena atmosphere." },
+      { id: 6, name: "Escape Castle", desc: "Trace path coordination algorithms to locate the fortress gateway key." },
+      { id: 7, name: "Champion Quiz", desc: "Complete general military warrior knowledge operations." }
+    ];
+
+    const NON_GAMER_STAGES = [
+      { id: 1, name: "Personality Quiz", desc: "Answer elemental questions to discover your spirit archetype." },
+      { id: 2, name: "Find Hidden Objects", desc: "Detect correct historic temple relics hidden among environmental noise." },
+      { id: 3, name: "Memory Challenge", desc: "Follow complex temple sequence patterns successfully." },
+      { id: 4, name: "Color Sequence", desc: "Sort ancient alignment crystals by wavelength order." },
+      { id: 5, name: "Bridge Puzzle", desc: "Identify secure crossing stones across dangerous temple bridge." },
+      { id: 6, name: "Secret Key Puzzle", desc: "Unlock combination alignment gear mechanics." },
+      { id: 7, name: "Wisdom Challenge", desc: "Resolve deep ancient riddles given by the old temple guardians." }
+    ];
+
+    // Voice Synthesis Engine Setup
+    function speak(textEn, textHi) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      let text = (state.lang === 'hi') ? textHi : textEn;
+      
+      let utterance = new SpeechSynthesisUtterance(text);
+      let voices = window.speechSynthesis.getVoices();
+      
+      // Attempt matching target language voice
+      let targetLang = (state.lang === 'hi') ? 'hi-IN' : 'en-US';
+      let matchingVoice = voices.find(v => v.lang.includes(targetLang));
+      if (matchingVoice) {
+        utterance.voice = matchingVoice;
+      }
+      
+      // Synthesize specific gender and tone based on config
+      if (state.voice === 'male') {
+        utterance.pitch = 0.8;
+        utterance.rate = 0.9;
+      } else {
+        utterance.pitch = 1.15;
+        utterance.rate = 1.0;
+      }
+      
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Initialize System and LocalStorage parsing
+    window.addEventListener('DOMContentLoaded', () => {
+      initParticles();
+      loadSystemData();
+      translateUI();
+      
+      // Ensure Web Speech Synthesis is ready
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {};
+      }
+    });
+
+    function loadSystemData() {
+      let saved = localStorage.getItem('sl_journey_state');
+      if (saved) {
+        try {
+          let parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+          document.getElementById('btn-continue').removeAttribute('disabled');
+          updateNavStats();
+        } catch (e) {
+          console.error("LocalState failed to load clean", e);
+        }
+      }
+    }
+
+    function saveSystemData() {
+      localStorage.setItem('sl_journey_state', JSON.stringify(state));
+      updateNavStats();
+    }
+
+    function updateNavStats() {
+      document.getElementById('nav-level-val').innerText = state.currentActiveStage;
+      document.getElementById('nav-xp-val').innerText = state.totalXP;
+      document.getElementById('dash-score-val').innerText = state.totalScore;
+      document.getElementById('dash-xp-val').innerText = state.totalXP;
+      let percent = Math.floor(((state.currentActiveStage - 1) / 7) * 100);
+      document.getElementById('dash-progress-val').innerText = percent + "%";
+    }
+
+    // Multi-Language Translation Mapping Utility
+    function translateUI() {
+      const trans = TRANSLATIONS[state.lang];
+      document.querySelectorAll('[data-t]').forEach(element => {
+        let key = element.getAttribute('data-t');
+        if (trans[key]) {
+          element.innerText = trans[key];
+        }
+      });
+      document.getElementById('nav-lang-btn').innerText = state.lang === 'en' ? 'English' : 'Hinglish';
+    }
+
+    // 3D Cinematic Screen Transitions Engine
+    function navigateTo(screenId) {
+      const activeScreen = document.getElementById(state.currentScreen);
+      const targetScreen = document.getElementById(screenId);
+      if (!activeScreen || !targetScreen) return;
+
+      activeScreen.classList.add('exit-left');
+      targetScreen.classList.add('enter-right');
+      targetScreen.style.display = 'flex';
+
+      // Apply screen-specific global background variable changes for rich feel
+      let bgStyle = targetScreen.style.getPropertyValue('--current-bg') || 'var(--royal-blue-bg)';
+      document.body.style.background = bgStyle;
+
+      setTimeout(() => {
+        activeScreen.classList.remove('active', 'exit-left');
+        activeScreen.style.display = 'none';
+        
+        targetScreen.classList.remove('enter-right');
+        targetScreen.classList.add('active');
+        state.currentScreen = screenId;
+        saveSystemData();
+      }, 600);
+    }
+
+    // Language Toggle Actions
+    function toggleLangSettings() {
+      fx.playClick();
+      navigateTo('screen-language');
+    }
+
+    function setLanguage(lang) {
+      fx.playClick();
+      state.lang = lang;
+      document.getElementById('lang-en-btn').className = 'pookie-btn' + (lang === 'en' ? ' gold' : '');
+      document.getElementById('lang-hi-btn').className = 'pookie-btn' + (lang === 'hi' ? ' gold' : '');
+    }
+
+    function setVoice(gender) {
+      fx.playClick();
+      state.voice = gender;
+      document.getElementById('voice-male-btn').className = 'pookie-btn' + (gender === 'male' ? ' gold' : '');
+      document.getElementById('voice-female-btn').className = 'pookie-btn' + (gender === 'female' ? ' gold' : '');
+    }
+
+    function saveLanguageSettings() {
+      fx.playSuccess();
+      translateUI();
+      navigateTo('screen-welcome');
+      speak("Language settings updated successfully.", "Aapki bhasha settings badal di gayi hain.");
+    }
+
+    // Start Journey Flows
+    function startJourney() {
+      fx.playClick();
+      speak(TRANSLATIONS.en.speech_welcome, TRANSLATIONS.hi.speech_welcome);
+      state.currentQuestionIndex = 0;
+      navigateTo('screen-details');
+      renderQuestion();
+    }
+
+    function continueJourney() {
+      fx.playSuccess();
+      speak("Welcome back, returning explorer.", "SorrowLyfx Journey mein aapka swagat hai.");
+      if (state.currentActiveStage > 7) {
+        buildCertificate();
+        navigateTo('screen-celebration');
+      } else {
+        renderDashboard();
+        navigateTo('screen-dashboard');
+      }
+    }
+
+    // Questionnaire dynamic layout renderer
+    function renderQuestion() {
+      let q = QUESTIONS[state.currentQuestionIndex];
+      document.getElementById('question-progress-indicator').innerText = `Question ${state.currentQuestionIndex + 1} of 12`;
+      document.getElementById('question-text-content').innerText = state.lang === 'en' ? q.textEn : q.textHi;
+      
+      let container = document.getElementById('question-input-container');
+      container.innerHTML = '';
+
+      if (q.type === 'text' || q.type === 'number') {
+        let val = state.userDetails[q.id] || '';
+        let input = document.createElement('input');
+        input.type = q.type;
+        input.className = 'input-field';
+        input.value = val;
+        input.id = 'q-input-element';
+        input.placeholder = 'Type your answer here...';
+        container.appendChild(input);
+        input.focus();
+        
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') nextQuestion();
+        });
+      } else if (q.type === 'choice') {
+        let selectedVal = state.userDetails[q.id] || '';
+        let grp = document.createElement('div');
+        grp.className = 'choice-group';
+        q.options.forEach(opt => {
+          let btn = document.createElement('button');
+          btn.className = 'choice-btn' + (selectedVal === opt.val ? ' selected' : '');
+          btn.innerText = opt.label;
+          btn.onclick = () => {
+            state.userDetails[q.id] = opt.val;
+            renderQuestion();
+          };
+          grp.appendChild(btn);
+        });
+        container.appendChild(grp);
+      }
+    }
+
+    function nextQuestion() {
+      let q = QUESTIONS[state.currentQuestionIndex];
+      let val = '';
+      let inputEl = document.getElementById('q-input-element');
+      if (inputEl) {
+        val = inputEl.value.trim();
+        state.userDetails[q.id] = val;
+      } else {
+        val = state.userDetails[q.id] || '';
+      }
+
+      // Check required inputs except optional email
+      if (q.id !== 'email' && !val) {
+        fx.playFail();
+        alert(state.lang === 'en' ? "Please provide an answer before moving on!" : "Kripya aage badhne ke liye jawab dein!");
+        return;
+      }
+
+      fx.playClick();
+
+      if (state.currentQuestionIndex < QUESTIONS.length - 1) {
+        state.currentQuestionIndex++;
+        renderQuestion();
+      } else {
+        // Complete registration configuration
+        state.isGamer = (state.userDetails['isFF'] === 'yes');
+        state.currentActiveStage = 1;
+        state.totalXP = 100; // Bonus starting XP
+        state.totalScore = 0;
+        state.certificateId = 'SLX-2026-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+        saveSystemData();
+        renderDashboard();
+        navigateTo('screen-dashboard');
+      }
+    }
+
+    function prevQuestion() {
+      fx.playClick();
+      if (state.currentQuestionIndex > 0) {
+        state.currentQuestionIndex--;
+        renderQuestion();
+      } else {
+        navigateTo('screen-welcome');
+      }
+    }
+
+    // Dashboard path coordination renderer
+    function renderDashboard() {
+      const container = document.getElementById('stages-path-container');
+      container.innerHTML = '';
+      
+      const stages = state.isGamer ? GAMER_STAGES : NON_GAMER_STAGES;
+      
+      document.getElementById('journey-title-header').innerText = state.isGamer ? "WARRIOR LEGENDS JOURNEY" : "MYSTERY TEMPLE JOURNEY";
+      document.getElementById('journey-subtitle-text').innerText = state.isGamer ? "ROYAL KINGDOM OF WARRIORS" : "ANCIENT ROYAL TEMPLE";
+
+      stages.forEach((stg, index) => {
+        let nodeIdx = index + 1;
+        let node = document.createElement('div');
+        node.className = 'stage-node';
+        node.innerText = nodeIdx;
+        
+        if (nodeIdx < state.currentActiveStage) {
+          node.classList.add('completed');
+        } else if (nodeIdx === state.currentActiveStage) {
+          node.classList.add('current');
+        } else {
+          node.classList.add('locked');
+        }
+
+        // Mini tooltip mapping
+        let tooltip = document.createElement('div');
+        tooltip.className = 'node-tooltip';
+        tooltip.innerText = state.lang === 'en' ? stg.name : stg.name; // Keep unique title tags uniform
+        node.appendChild(tooltip);
+
+        node.onclick = () => {
+          if (nodeIdx <= state.currentActiveStage) {
+            enterStageArena(stg);
+          } else {
+            fx.playFail();
+            speak("This stage is locked.", "Yeh level abhi locked hai.");
+          }
+        };
+
+        container.appendChild(node);
+      });
+
+      updateNavStats();
+    }
+
+    // Stage Game Session Handlers
+    let activeStageRef = null;
+    let gameTimerInterval = null;
+    let gameTimeRemaining = 30;
+    let stageLocalScore = 0;
+
+    function enterStageArena(stg) {
+      fx.playClick();
+      activeStageRef = stg;
+      
+      document.getElementById('arena-stage-title').innerText = `Stage ${stg.id}: ${stg.name}`;
+      document.getElementById('arena-stage-desc').innerText = stg.desc;
+      document.getElementById('arena-instructions-text').innerText = getStageInstruction(stg.id);
+      
+      document.getElementById('arena-instructions').style.display = 'flex';
+      document.getElementById('arena-playfield').style.display = 'none';
+      document.getElementById('arena-retry-btn').style.display = 'none';
+      
+      navigateTo('screen-arena');
+      speak(TRANSLATIONS.en.speech_stage_start, TRANSLATIONS.hi.speech_stage_start);
+    }
+
+    function getStageInstruction(id) {
+      if (state.isGamer) {
+        switch(id) {
+          case 1: return "Input your professional Game UID and verify identity safely.";
+          case 2: return "Find the 3 hidden gold coordinates under the kingdom grid mapping.";
+          case 3: return "Tap on the glowing symbols before they disappear. Match 10 points to clear!";
+          case 4: return "Match all the identical warrior cards within the given time limits.";
+          case 5: return "Move your tactical container safely using arrow keys or buttons to catch descending blue crystals.";
+          case 6: return "Trace coordination mechanics: Navigate the character safely to collect the key, then open the gateway.";
+          case 7: return "Resolve the final military tactics query challenge accurately.";
+        }
+      } else {
+        switch(id) {
+          case 1: return "Answer elemental questions to identify your spiritual inner archetype.";
+          case 2: return "Find the 3 targeted temple relics within the crowded digital canvas environment.";
+          case 3: return "Memorize and repeat the glowing crystal code elements correctly.";
+          case 4: return "Sort dynamic spectrum crystal blocks in their correct wavelength progression.";
+          case 5: return "Secure safe paths. Click only on safe stones shown briefly before crossing.";
+          case 6: return "Arrange rotating combination lock wheels to match numerical values.";
+          case 7: return "Respond correctly to ancient spiritual riddles given by high guards.";
+        }
+      }
+      return "Complete the challenge successfully.";
+    }
+
+    function startGameSession() {
+      fx.playClick();
+      document.getElementById('arena-instructions').style.display = 'none';
+      document.getElementById('arena-playfield').style.display = 'flex';
+      
+      stageLocalScore = 0;
+      gameTimeRemaining = 45;
+      document.getElementById('arena-score').innerText = stageLocalScore;
+      document.getElementById('arena-timer').innerText = gameTimeRemaining;
+
+      // Start Countdown
+      clearInterval(gameTimerInterval);
+      gameTimerInterval = setInterval(() => {
+        gameTimeRemaining--;
+        document.getElementById('arena-timer').innerText = gameTimeRemaining;
+        if (gameTimeRemaining <= 0) {
+          endGameSession(false);
+        }
+      }, 1000);
+
+      loadGameViewport(activeStageRef.id);
+    }
+
+    function restartStage() {
+      startGameSession();
+    }
+
+    function exitArena() {
+      fx.playClick();
+      clearInterval(gameTimerInterval);
+      renderDashboard();
+      navigateTo('screen-dashboard');
+    }
+
+    function endGameSession(success) {
+      clearInterval(gameTimerInterval);
+      if (success) {
+        fx.playSuccess();
+        let earnedXP = 150 + stageLocalScore * 10;
+        state.totalXP += earnedXP;
+        state.totalScore += stageLocalScore * 100;
+        state.completedStages[activeStageRef.id] = true;
+        
+        speak("Stage Clear! Outstanding work.", "Level clear! Bahut badhiya.");
+        
+        if (state.currentActiveStage === activeStageRef.id) {
+          state.currentActiveStage++;
+        }
+        saveSystemData();
+
+        setTimeout(() => {
+          if (state.currentActiveStage > 7) {
+            triggerFinalCelebration();
+          } else {
+            renderDashboard();
+            navigateTo('screen-dashboard');
+          }
+        }, 1500);
+
+      } else {
+        fx.playFail();
+        speak("Mission failed. Please try again.", "Afsos! Koshish dobara karein.");
+        document.getElementById('arena-retry-btn').style.display = 'inline-block';
+      }
+    }
+
+    // GAME ENGINE COORDINATION AND DISPATCHER
+    function loadGameViewport(id) {
+      const field = document.getElementById('arena-playfield');
+      field.innerHTML = '';
+
+      if (state.isGamer) {
+        runGamerGame(id, field);
+      } else {
+        runNonGamerGame(id, field);
+      }
+    }
+
+    // GAMER ARCADE SYSTEMS
+    function runGamerGame(id, field) {
+      if (id === 1) { // Player Identity Verification
+        field.innerHTML = `
+          <div style="width:100%;">
+            <p style="margin-bottom:15px;">Enter Gaming UID (Numeric only):</p>
+            <input type="number" id="game-uid" class="input-field" placeholder="E.g. 58392819">
+            <button class="pookie-btn gold" onclick="verifyGamerIdentity()">VERIFY PROFILE</button>
+          </div>
+        `;
+      }
+      else if (id === 2) { // Treasure Finder
+        let mapGrid = document.createElement('div');
+        mapGrid.style.display = 'grid';
+        mapGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        mapGrid.style.gap = '10px';
+        
+        // Hide 3 chests
+        let targetCells = [];
+        while(targetCells.length < 3) {
+          let r = Math.floor(Math.random() * 16);
+          if(!targetCells.includes(r)) targetCells.push(r);
+        }
+        
+        let found = 0;
+        for (let i = 0; i < 16; i++) {
+          let btn = document.createElement('div');
+          btn.className = 'card-element';
+          btn.innerText = '❓';
+          btn.onclick = () => {
+            if (btn.style.pointerEvents === 'none') return;
+            fx.playClick();
+            btn.style.pointerEvents = 'none';
+            if (targetCells.includes(i)) {
+              btn.innerText = '🎁';
+              btn.style.background = '#ffd700';
+              found++;
+              stageLocalScore += 50;
+              document.getElementById('arena-score').innerText = stageLocalScore;
+              if (found === 3) {
+                endGameSession(true);
+              }
+            } else {
+              btn.innerText = '❌';
+              btn.style.background = '#444';
+            }
+          };
+          mapGrid.appendChild(btn);
+        }
+        field.appendChild(mapGrid);
+      }
+      else if (id === 3) { // Reaction Master
+        field.innerHTML = `
+          <div id="target-arena" style="width:100%; height:250px; position:relative; background:#050510; border-radius:12px; overflow:hidden;">
+            <p style="text-align:center; margin-top:10px; font-size:0.85rem; color:#aaa;">TAP THE GLOWING AMMO CORES!</p>
+          </div>
+        `;
+        let arena = document.getElementById('target-arena');
+        let tapped = 0;
+        
+        function spawnTarget() {
+          if (tapped >= 10) {
+            endGameSession(true);
+            return;
+          }
+          let target = document.createElement('div');
+          target.style.position = 'absolute';
+          target.style.width = '50px';
+          target.style.height = '50px';
+          target.style.borderRadius = '50%';
+          target.style.background = '#ff0055';
+          target.style.boxShadow = '0 0 15px #ff0055';
+          target.style.cursor = 'pointer';
+          target.style.top = Math.random() * 180 + 10 + 'px';
+          target.style.left = Math.random() * 80 + 10 + '%';
+          
+          target.onclick = () => {
+            fx.playClick();
+            tapped++;
+            stageLocalScore += 10;
+            document.getElementById('arena-score').innerText = stageLocalScore;
+            arena.removeChild(target);
+            spawnTarget();
+          };
+          
+          arena.appendChild(target);
+          
+          // Despawn
+          setTimeout(() => {
+            if (target.parentNode === arena) {
+              arena.removeChild(target);
+              spawnTarget();
+            }
+          }, 1500);
+        }
+        spawnTarget();
+      }
+      else if (id === 4) { // Memory Match (Warriors)
+        let grid = document.createElement('div');
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        grid.style.gap = '10px';
+        
+        let symbols = ['🐉', '🛡️', '⚔️', '🔮', '🐉', '🛡️', '⚔️', '🔮'];
+        // Shuffle
+        symbols.sort(() => Math.random() - 0.5);
+
+        let activeSelection = null;
+        let matchedCount = 0;
+
+        symbols.forEach((sym, idx) => {
+          let card = document.createElement('div');
+          card.className = 'card-element';
+          card.innerText = '❓';
+          card.dataset.index = idx;
+
+          card.onclick = () => {
+            if (card.classList.contains('matched') || card === activeSelection) return;
+            fx.playClick();
+            card.innerText = sym;
+
+            if (!activeSelection) {
+              activeSelection = card;
+            } else {
+              if (symbols[activeSelection.dataset.index] === sym) {
+                activeSelection.classList.add('matched');
+                card.classList.add('matched');
+                activeSelection = null;
+                matchedCount += 2;
+                stageLocalScore += 100;
+                document.getElementById('arena-score').innerText = stageLocalScore;
+                if (matchedCount === 8) {
+                  endGameSession(true);
+                }
+              } else {
+                let temp = activeSelection;
+                activeSelection = null;
+                setTimeout(() => {
+                  temp.innerText = '❓';
+                  card.innerText = '❓';
+                }, 800);
+              }
+            }
+          };
+          grid.appendChild(card);
+        });
+        field.appendChild(grid);
+      }
+      else if (id === 5) { // Crystal Collector Canvas
+        let canvas = document.createElement('canvas');
+        canvas.id = 'canvas-game-board';
+        canvas.width = 400;
+        canvas.height = 300;
+        field.appendChild(canvas);
+
+        let ctx = canvas.getContext('2d');
+        let basketX = 180;
+        let items = [];
+        let score = 0;
+
+        function updateCanvasGame() {
+          if (gameTimeRemaining <= 0 || score >= 10) return;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          
+          // Draw basket
+          ctx.fillStyle = '#ff416c';
+          ctx.fillRect(basketX, 280, 50, 20);
+          
+          // Spawn items
+          if (Math.random() < 0.05) {
+            items.push({ x: Math.random() * (canvas.width - 20) + 10, y: 0, speed: Math.random() * 2 + 2 });
+          }
+
+          items.forEach((item, idx) => {
+            item.y += item.speed;
+            
+            // Draw Blue Diamond/Crystal
+            ctx.fillStyle = '#00e5ff';
+            ctx.beginPath();
+            ctx.moveTo(item.x, item.y - 8);
+            ctx.lineTo(item.x + 8, item.y);
+            ctx.lineTo(item.x, item.y + 8);
+            ctx.lineTo(item.x - 8, item.y);
+            ctx.closePath();
+            ctx.fill();
+
+            // Collision check
+            if (item.y >= 270 && item.x >= basketX && item.x <= basketX + 50) {
+              fx.playClick();
+              items.splice(idx, 1);
+              score++;
+              stageLocalScore += 20;
+              document.getElementById('arena-score').innerText = stageLocalScore;
+              if (score >= 10) {
+                endGameSession(true);
+              }
+            }
+          });
+
+          requestAnimationFrame(updateCanvasGame);
+        }
+
+        // Controllers
+        let cGrp = document.createElement('div');
+        cGrp.style.display = 'flex';
+        cGrp.style.gap = '20px';
+        cGrp.style.marginTop = '15px';
+        cGrp.innerHTML = `
+          <button class="pookie-btn" style="padding:10px 25px;" onclick="window.moveBasket(-30)">◀ LEFT</button>
+          <button class="pookie-btn" style="padding:10px 25px;" onclick="window.moveBasket(30)">RIGHT ▶</button>
+        `;
+        window.moveBasket = (amt) => {
+          basketX = Math.max(0, Math.min(canvas.width - 50, basketX + amt));
+        };
+        field.appendChild(cGrp);
+
+        updateCanvasGame();
+      }
+      else if (id === 6) { // Escape Castle
+        field.innerHTML = `
+          <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-width:250px; margin: 0 auto;">
+            <div id="grid-maze"></div>
+          </div>
+          <p style="margin-top:15px; font-size:0.9rem;" id="maze-status">Collect the Key 🔑 and unlock Castle door 🚪!</p>
+        `;
+        let mazeDiv = document.getElementById('grid-maze');
+        mazeDiv.style.display = 'grid';
+        mazeDiv.style.gridTemplateColumns = 'repeat(5, 1fr)';
+        mazeDiv.style.gap = '8px';
+        mazeDiv.style.width = '250px';
+
+        let playerPos = 0;
+        let keyPos = 12;
+        let doorPos = 24;
+        let hasKey = false;
+
+        function drawMaze() {
+          mazeDiv.innerHTML = '';
+          for (let i = 0; i < 25; i++) {
+            let cell = document.createElement('div');
+            cell.style.width = '40px';
+            cell.style.height = '40px';
+            cell.style.background = '#1a1a2e';
+            cell.style.border = '1px solid rgba(255,255,255,0.1)';
+            cell.style.borderRadius = '6px';
+            cell.style.display = 'flex';
+            cell.style.justifyContent = 'center';
+            cell.style.alignItems = 'center';
+            cell.style.cursor = 'pointer';
+
+            if (i === playerPos) cell.innerText = '🛡️';
+            else if (i === keyPos && !hasKey) cell.innerText = '🔑';
+            else if (i === doorPos) cell.innerText = '🚪';
+
+            cell.onclick = () => {
+              // check if orthogonal neighbor
+              let diff = Math.abs(i - playerPos);
+              if (diff === 1 || diff === 5) {
+                fx.playClick();
+                playerPos = i;
+                if (playerPos === keyPos && !hasKey) {
+                  hasKey = true;
+                  fx.playAchievement();
+                  document.getElementById('maze-status').innerText = "Key acquired! Open the gateway gate 🚪.";
+                }
+                if (playerPos === doorPos && hasKey) {
+                  stageLocalScore = 150;
+                  endGameSession(true);
+                }
+                drawMaze();
+              }
+            };
+            mazeDiv.appendChild(cell);
+          }
+        }
+        drawMaze();
+      }
+      else if (id === 7) { // Champion Quiz
+        field.innerHTML = `
+          <div style="max-width:500px; text-align:left;">
+            <h3 style="margin-bottom:20px;">Which tactical weapon is best known for close range combat squad mechanics?</h3>
+            <button class="choice-btn" onclick="checkGamerQuiz(true)">AWM</button>
+            <button class="choice-btn" style="margin-top:10px;" onclick="checkGamerQuiz(false)">MP40 / M1887</button>
+            <button class="choice-btn" style="margin-top:10px;" onclick="checkGamerQuiz(true)">USP</button>
+          </div>
+        `;
+        window.checkGamerQuiz = (fail) => {
+          if (fail) {
+            endGameSession(false);
+          } else {
+            stageLocalScore = 200;
+            endGameSession(true);
+          }
+        };
+      }
+    }
+
+    // NON-GAMER ARCADE SYSTEMS
+    function runNonGamerGame(id, field) {
+      if (id === 1) { // Personality Archetype Quiz
+        field.innerHTML = `
+          <div style="max-width:500px;">
+            <p style="margin-bottom:20px; font-weight:600;">Choose the element that best reflects your soul mindset:</p>
+            <button class="choice-btn" style="margin-bottom:10px;" onclick="finishPersonality('Cosmic Ether')">Ethereal Stars / Universe</button>
+            <button class="choice-btn" style="margin-bottom:10px;" onclick="finishPersonality('Golden Aura')">Radiant Solar Gold</button>
+            <button class="choice-btn" style="margin-bottom:10px;" onclick="finishPersonality('Deep Ocean')">Peaceful Sapphire Water</button>
+          </div>
+        `;
+        window.finishPersonality = (archetype) => {
+          state.userDetails['archetype'] = archetype;
+          stageLocalScore = 100;
+          endGameSession(true);
+        };
+      }
+      else if (id === 2) { // Spot Hidden Objects
+        field.innerHTML = `
+          <div style="width:100%;">
+            <p style="margin-bottom:15px; font-weight:bold;">Find the Mystical Scroll (📜) and Crystal Orb (🔮) below!</p>
+            <div id="hidden-arena" style="width:100%; height:200px; background:#0b132b; border: 1px solid #00e5ff; border-radius:12px; position:relative; overflow:hidden;"></div>
+          </div>
+        `;
+        let arena = document.getElementById('hidden-arena');
+        let symbols = ['🌲', '⛰️', '🦉', '💎', '🗿', '🔑', '🕯️', '🍄'];
+        
+        // Spawn distraction clutter
+        for (let i = 0; i < 40; i++) {
+          let item = document.createElement('div');
+          item.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+          item.style.position = 'absolute';
+          item.style.left = Math.random() * 90 + '%';
+          item.style.top = Math.random() * 80 + '%';
+          item.style.cursor = 'default';
+          arena.appendChild(item);
+        }
+
+        let targetsFound = 0;
+        let targets = ['📜', '🔮'];
+        targets.forEach(sym => {
+          let target = document.createElement('div');
+          target.innerText = sym;
+          target.style.position = 'absolute';
+          target.style.left = Math.random() * 90 + '%';
+          target.style.top = Math.random() * 80 + '%';
+          target.style.cursor = 'pointer';
+          target.style.fontSize = '1.5rem';
+          target.onclick = () => {
+            fx.playClick();
+            target.style.pointerEvents = 'none';
+            target.style.opacity = '0.3';
+            targetsFound++;
+            stageLocalScore += 50;
+            if (targetsFound === 2) {
+              endGameSession(true);
+            }
+          };
+          arena.appendChild(target);
+        });
+      }
+      else if (id === 3) { // Memory Sequence (Simon)
+        field.innerHTML = `
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; width:200px; margin: 0 auto;">
+            <button id="simon-0" style="height:80px; background:#4a154b; border-radius:12px; border:none;"></button>
+            <button id="simon-1" style="height:80px; background:#1e3a8a; border-radius:12px; border:none;"></button>
+            <button id="simon-2" style="height:80px; background:#065f46; border-radius:12px; border:none;"></button>
+            <button id="simon-3" style="height:80px; background:#9d174d; border-radius:12px; border:none;"></button>
+          </div>
+          <p id="simon-state" style="margin-top:15px; font-weight:600;">Observe the patterns...</p>
+        `;
+        
+        let sequence = [0, 2, 1, 3];
+        let userSteps = [];
+        let curIdx = 0;
+
+        function flashSequence() {
+          let step = 0;
+          let interval = setInterval(() => {
+            let targetId = `simon-${sequence[step]}`;
+            let el = document.getElementById(targetId);
+            if(el) {
+              el.style.filter = 'brightness(2.5)';
+              fx.playClick();
+              setTimeout(() => { el.style.filter = 'none'; }, 400);
+            }
+            step++;
+            if (step >= sequence.length) {
+              clearInterval(interval);
+              document.getElementById('simon-state').innerText = "Repeat the sequence now!";
+              enableButtons();
+            }
+          }, 800);
+        }
+
+        function enableButtons() {
+          for (let i = 0; i < 4; i++) {
+            let btn = document.getElementById(`simon-${i}`);
+            btn.onclick = () => {
+              fx.playClick();
+              userSteps.push(i);
+              if (userSteps[curIdx] !== sequence[curIdx]) {
+                endGameSession(false);
+              } else {
+                curIdx++;
+                if (curIdx === sequence.length) {
+                  stageLocalScore = 150;
+                  endGameSession(true);
+                }
+              }
+            };
+          }
+        }
+
+        setTimeout(flashSequence, 1000);
+      }
+      else if (id === 4) { // Color Sequence Sort
+        field.innerHTML = `
+          <p style="margin-bottom:15px;">Arrange in standard spectrum order: Red ➡️ Yellow ➡️ Green ➡️ Blue</p>
+          <div id="color-sort-container" style="display:flex; gap:10px; margin-bottom:20px;"></div>
+          <button class="pookie-btn gold" onclick="checkColorOrder()">CONFIRM ALIGNMENT</button>
+        `;
+        let blocks = [
+          { id: 'b', color: '#1e3a8a', label: 'Blue' },
+          { id: 'g', color: '#065f46', label: 'Green' },
+          { id: 'y', color: '#d97706', label: 'Yellow' },
+          { id: 'r', color: '#9d174d', label: 'Red' }
+        ];
+        
+        // Shuffle blocks
+        blocks.sort(() => Math.random() - 0.5);
+
+        let container = document.getElementById('color-sort-container');
+        function renderBlocks() {
+          container.innerHTML = '';
+          blocks.forEach((b, idx) => {
+            let div = document.createElement('div');
+            div.style.background = b.color;
+            div.style.padding = '15px 25px';
+            div.style.borderRadius = '8px';
+            div.style.cursor = 'pointer';
+            div.innerText = b.label;
+            div.onclick = () => {
+              // Simple swap with next element to sort
+              let next = (idx + 1) % blocks.length;
+              let temp = blocks[idx];
+              blocks[idx] = blocks[next];
+              blocks[next] = temp;
+              renderBlocks();
+            };
+            container.appendChild(div);
+          });
+        }
+        renderBlocks();
+
+        window.checkColorOrder = () => {
+          let order = blocks.map(b => b.id).join('');
+          if (order === 'rygb') {
+            stageLocalScore = 150;
+            endGameSession(true);
+          } else {
+            endGameSession(false);
+          }
+        };
+      }
+      else if (id === 5) { // Bridge Puzzle
+        field.innerHTML = `
+          <p style="margin-bottom:15px;">Navigate the magic bridge steps correctly!</p>
+          <div style="display:flex; flex-direction:column; gap:10px; max-width:200px; margin: 0 auto;" id="bridge-lanes"></div>
+        `;
+        let laneDiv = document.getElementById('bridge-lanes');
+        let currentStep = 0;
+        let safeSteps = [1, 0, 1]; // Left (0) / Right (1) path configuration
+
+        function drawBridge() {
+          laneDiv.innerHTML = '';
+          for (let r = 2; r >= 0; r--) {
+            let row = document.createElement('div');
+            row.style.display = 'flex';
+            row.style.gap = '15px';
+            
+            for (let c = 0; c < 2; c++) {
+              let col = document.createElement('button');
+              col.className = 'choice-btn';
+              col.innerText = (c === 0) ? 'Left Plank' : 'Right Plank';
+              
+              if (r < currentStep) {
+                col.style.background = '#065f46';
+                col.style.pointerEvents = 'none';
+              } else if (r > currentStep) {
+                col.style.opacity = '0.5';
+                col.style.pointerEvents = 'none';
+              } else {
+                col.onclick = () => {
+                  fx.playClick();
+                  if (c === safeSteps[currentStep]) {
+                    currentStep++;
+                    if (currentStep === 3) {
+                      stageLocalScore = 180;
+                      endGameSession(true);
+                    } else {
+                      drawBridge();
+                    }
+                  } else {
+                    endGameSession(false);
+                  }
+                };
+              }
+              row.appendChild(col);
+            }
+            laneDiv.appendChild(row);
+          }
+        }
+        drawBridge();
+      }
+      else if (id === 6) { // Secret Key Combination Lock
+        field.innerHTML = `
+          <p style="margin-bottom:15px;">Unlock the combination pattern code: (7 - 2 - 5)</p>
+          <div style="display:flex; justify-content:center; gap:15px; margin-bottom:20px;">
+            <input type="number" id="lock-0" value="0" min="0" max="9" class="input-field" style="width:60px;">
+            <input type="number" id="lock-1" value="0" min="0" max="9" class="input-field" style="width:60px;">
+            <input type="number" id="lock-2" value="0" min="0" max="9" class="input-field" style="width:60px;">
+          </div>
+          <button class="pookie-btn gold" onclick="tryUnlockCombination()">ATTEMPT UNLOCK</button>
+        `;
+        window.tryUnlockCombination = () => {
+          let v0 = document.getElementById('lock-0').value;
+          let v1 = document.getElementById('lock-1').value;
+          let v2 = document.getElementById('lock-2').value;
+          if (v0 == 7 && v1 == 2 && v2 == 5) {
+            stageLocalScore = 150;
+            endGameSession(true);
+          } else {
+            endGameSession(false);
+          }
+        };
+      }
+      else if (id === 7) { // Wisdom Challenge
+        field.innerHTML = `
+          <div style="max-width:500px; text-align:left;">
+            <h3 style="margin-bottom:20px;">What can travel all around the world while remaining secure in a single corner?</h3>
+            <button class="choice-btn" onclick="checkWisdom(false)">A Stamp / Daak Ticket</button>
+            <button class="choice-btn" style="margin-top:10px;" onclick="checkWisdom(true)">A Horizon</button>
+            <button class="choice-btn" style="margin-top:10px;" onclick="checkWisdom(true)">A Shadow</button>
+          </div>
+        `;
+        window.checkWisdom = (fail) => {
+          if (fail) {
+            endGameSession(false);
+          } else {
+            stageLocalScore = 200;
+            endGameSession(true);
+          }
+        };
+      }
+    }
+
+    // Secure custom ID profile check
+    function verifyGamerIdentity() {
+      let uid = document.getElementById('game-uid').value;
+      if (uid.length < 5) {
+        fx.playFail();
+        alert(state.lang === 'en' ? "UID must contain at least 5 digits!" : "UID kam se kam 5 digit ka hona chahiye!");
+        return;
+      }
+      fx.playAchievement();
+      stageLocalScore = 100;
+      endGameSession(true);
+    }
+
+    // CELEBRATION AND FINAL CERTIFICATE GENERATION SYSTEMS
+    function triggerFinalCelebration() {
+      navigateTo('screen-celebration');
+      speak(TRANSLATIONS.en.speech_complete, TRANSLATIONS.hi.speech_complete);
+      buildCertificate();
+      launchConfettiSystem();
+    }
+
+    function buildCertificate() {
+      // Dynamic details integration
+      let name = state.userDetails['name'] || 'Explorer';
+      let nick = state.userDetails['nickname'] || 'Vanguard';
+      let country = state.userDetails['country'] || 'Earth';
+      let journey = state.isGamer ? 'Warrior Legends' : 'Mystery Temple';
+      let score = state.totalScore;
+      let date = new Date().toLocaleDateString();
+      
+      let rank = 'Bronze';
+      if (state.totalXP > 1000) rank = 'PLATINUM';
+      else if (state.totalXP > 700) rank = 'GOLD';
+      else if (state.totalXP > 400) rank = 'SILVER';
+
+      document.getElementById('cert-user-name').innerText = name.toUpperCase();
+      document.getElementById('cert-meta-name').innerText = name;
+      document.getElementById('cert-meta-nickname').innerText = nick;
+      document.getElementById('cert-meta-country').innerText = country;
+      document.getElementById('cert-meta-journey').innerText = journey;
+      document.getElementById('cert-meta-date').innerText = date;
+      document.getElementById('cert-meta-xp').innerText = state.totalXP;
+      document.getElementById('cert-meta-rank').innerText = rank;
+      document.getElementById('cert-meta-id').innerText = state.certificateId;
+
+      // Personalized recognition badge text
+      if (state.isGamer) {
+        document.getElementById('cert-rec-badge').innerText = "Recognized as a Passionate and Determined Gamer with excellent strategic thinking.";
+      } else {
+        document.getElementById('cert-rec-badge').innerText = "Recognized for Creativity, Ambition, Problem Solving, and Perseverance.";
+      }
+
+      // Generate Native SVG QR Code onto the target Canvas dynamically offline!
+      drawDeterministicQRCode(name, state.certificateId, rank);
+    }
+
+    // 100% Offline Procedural Deterministic QR Code Generator Canvas Integration
+    function drawDeterministicQRCode(name, certId, rank) {
+      let canvas = document.getElementById('cert-qr-canvas');
+      let ctx = canvas.getContext('2d');
+      let size = canvas.width;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, size, size);
+
+      // Finder corner patterns
+      ctx.fillStyle = '#0a0514';
+      drawFinder(ctx, 0, 0, 24);
+      drawFinder(ctx, size - 24, 0, 24);
+      drawFinder(ctx, 0, size - 24, 24);
+
+      // Procedural code matrix representing certified verification values
+      let signatureString = name + certId + rank;
+      let hashValue = 0;
+      for (let i = 0; i < signatureString.length; i++) {
+        hashValue = signatureString.charCodeAt(i) + ((hashValue << 5) - hashValue);
+      }
+
+      let gridStep = 4;
+      for (let x = 0; x < size; x += gridStep) {
+        for (let y = 0; y < size; y += gridStep) {
+          // Avoid overwriting corner finder squares
+          if ((x < 28 && y < 28) || (x > size - 28 && y < 28) || (x < 28 && y > size - 28)) {
+            continue;
+          }
+          let fillChance = Math.abs(Math.sin(hashValue + (x * 17) + (y * 23)));
+          if (fillChance > 0.5) {
+            ctx.fillRect(x, y, gridStep, gridStep);
+          }
+        }
+      }
+    }
+
+    function drawFinder(ctx, x, y, size) {
+      ctx.fillRect(x, y, size, size);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x + 4, y + 4, size - 8, size - 8);
+      ctx.fillStyle = '#0a0514';
+      ctx.fillRect(x + 8, y + 8, size - 16, size - 16);
+    }
+
+    // High quality dynamic Canvas Certificate PNG exporter built fully offline
+    function downloadCertificatePNG() {
+      fx.playAchievement();
+      const origin = document.getElementById('certificate-print-area');
+      
+      // We render a beautiful, high definition, offline clean canvas directly from the document state variables
+      const renderCanvas = document.createElement('canvas');
+      renderCanvas.width = 1200;
+      renderCanvas.height = 840;
+      const ctx = renderCanvas.getContext('2d');
+
+      // Gradient luxury background setup
+      let grad = ctx.createLinearGradient(0, 0, 1200, 840);
+      grad.addColorStop(0, '#090514');
+      grad.addColorStop(1, '#15092b');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1200, 840);
+
+      // Double golden border lines
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 15;
+      ctx.strokeRect(20, 20, 1160, 800);
+      ctx.lineWidth = 4;
+      ctx.strokeRect(40, 40, 1120, 760);
+
+      // Certificate content drawings
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 24px Cinzel, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText("SORROWLYFX ACADEMY", 600, 130);
+
+      ctx.fillStyle = '#ffd700';
+      ctx.font = 'bold 36px Cinzel, serif';
+      ctx.fillText("CERTIFICATE OF PROFESSIONAL EXCELLENCE", 600, 190);
+
+      ctx.fillStyle = '#a0aec0';
+      ctx.font = 'italic 20px Poppins, sans-serif';
+      ctx.fillText("This certificate is proudly presented to", 600, 250);
+
+      ctx.fillStyle = '#ffd700';
+      ctx.font = 'bold 50px Cinzel, serif';
+      ctx.fillText(state.userDetails['name'] ? state.userDetails['name'].toUpperCase() : 'EXPLORER', 600, 330);
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '16px Poppins, sans-serif';
+      let bodyText = "For successfully completing the SorrowLyfx Journey and demonstrating exceptional";
+      ctx.fillText(bodyText, 600, 410);
+      ctx.fillText("dedication, perseverance, intelligence, and determination.", 600, 440);
+
+      ctx.fillStyle = '#d4af37';
+      ctx.font = 'bold 18px Poppins, sans-serif';
+      let recText = state.isGamer ? "Recognized as a Passionate and Determined Gamer with excellent strategic thinking." : "Recognized for Creativity, Ambition, Problem Solving, and Perseverance.";
+      ctx.fillText(recText, 600, 500);
+
+      // Metadata section
+      ctx.fillStyle = '#a0aec0';
+      ctx.font = '14px Poppins, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`NICKNAME: ${state.userDetails['nickname'] || ''}`, 100, 600);
+      ctx.fillText(`COUNTRY: ${state.userDetails['country'] || ''}`, 100, 630);
+      ctx.fillText(`JOURNEY: ${state.isGamer ? 'Warrior Legends' : 'Mystery Temple'}`, 100, 660);
+      ctx.fillText(`DATE: ${new Date().toLocaleDateString()}`, 100, 690);
+
+      ctx.fillText(`TOTAL XP: ${state.totalXP}`, 500, 600);
+      let rank = state.totalXP > 1000 ? 'PLATINUM' : 'GOLD';
+      ctx.fillText(`RANK: ${rank}`, 500, 630);
+      ctx.fillText(`CERT NO: ${state.certificateId}`, 500, 660);
+
+      // Signatures
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#ffd700';
+      ctx.font = 'italic 24px Cinzel, serif';
+      ctx.fillText("SorrowLyfx", 1100, 630);
+      ctx.strokeStyle = '#d4af37';
+      ctx.beginPath();
+      ctx.moveTo(920, 645);
+      ctx.lineTo(1100, 645);
+      ctx.stroke();
+      ctx.fillStyle = '#a0aec0';
+      ctx.font = '12px Poppins, sans-serif';
+      ctx.fillText("Founder & Journey Director", 1100, 665);
+
+      // Output to user as anchor download link safely
+      let link = document.createElement('a');
+      link.download = `SorrowLyfx-Certificate-${state.certificateId}.png`;
+      link.href = renderCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function printCertificate() {
+      window.print();
+    }
+
+    function restartEntireJourney() {
+      fx.playClick();
+      if (confirm(state.lang === 'en' ? "Are you sure you want to restart your progress?" : "Kya aap waqai progress reset karna chahte hain?")) {
+        localStorage.removeItem('sl_journey_state');
+        state = {
+          lang: 'en',
+          voice: 'female',
+          currentScreen: 'screen-welcome',
+          userDetails: {},
+          isGamer: false,
+          currentQuestionIndex: 0,
+          currentActiveStage: 1,
+          totalXP: 0,
+          totalScore: 0,
+          completedStages: {},
+          certificateId: ''
+        };
+        saveSystemData();
+        translateUI();
+        document.getElementById('btn-continue').setAttribute('disabled', 'true');
+        navigateTo('screen-welcome');
+      }
+    }
+
+    // HIGH PERFORMANCE CANVAS PARTICLE AND CONFETTI SYSTEM
+    let particleCanvas, particleCtx;
+    let particles = [];
+    let confetti = [];
+
+    function initParticles() {
+      particleCanvas = document.getElementById('particle-canvas');
+      particleCtx = particleCanvas.getContext('2d');
+      resizeCanvas();
+      
+      window.addEventListener('resize', resizeCanvas);
+
+      // Generate base stars and dust
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: Math.random() * particleCanvas.width,
+          y: Math.random() * particleCanvas.height,
+          size: Math.random() * 2.5 + 0.5,
+          speedX: (Math.random() - 0.5) * 0.4,
+          speedY: (Math.random() - 0.5) * 0.4,
+          alpha: Math.random()
+        });
+      }
+
+      animateParticles();
+    }
+
+    function resizeCanvas() {
+      if(particleCanvas) {
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
+      }
+    }
+
+    function animateParticles() {
+      particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+      
+      // Star system movement
+      particleCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        
+        if (p.x < 0) p.x = particleCanvas.width;
+        if (p.x > particleCanvas.width) p.x = 0;
+        if (p.y < 0) p.y = particleCanvas.height;
+        if (p.y > particleCanvas.height) p.y = 0;
+
+        particleCtx.globalAlpha = p.alpha;
+        particleCtx.beginPath();
+        particleCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        particleCtx.fill();
+      });
+
+      // Confetti render when in celebration screen
+      if (confetti.length > 0) {
+        confetti.forEach((c, index) => {
+          c.y += c.speedY;
+          c.x += c.speedX;
+          c.rotation += c.rotationSpeed;
+
+          particleCtx.fillStyle = c.color;
+          particleCtx.globalAlpha = 1.0;
+          particleCtx.save();
+          particleCtx.translate(c.x, c.y);
+          particleCtx.rotate(c.rotation);
+          particleCtx.fillRect(-c.width / 2, -c.height / 2, c.width, c.height);
+          particleCtx.restore();
+
+          if (c.y > particleCanvas.height) {
+            confetti.splice(index, 1);
+          }
+        });
+      }
+
+      particleCtx.globalAlpha = 1.0;
+      requestAnimationFrame(animateParticles);
+    }
+
+    function launchConfettiSystem() {
+      confetti = [];
+      let colors = ['#ffd700', '#ff0055', '#00e5ff', '#00e676', '#a855f7'];
+      for (let i = 0; i < 150; i++) {
+        confetti.push({
+          x: Math.random() * particleCanvas.width,
+          y: Math.random() * -100 - 10,
+          width: Math.random() * 10 + 6,
+          height: Math.random() * 16 + 8,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speedY: Math.random() * 3 + 2,
+          speedX: (Math.random() - 0.5) * 2,
+          rotation: Math.random() * Math.PI,
+          rotationSpeed: (Math.random() - 0.5) * 0.1
+        });
+      }
+    }
+  </script>
+</body>
+</html>
